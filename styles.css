@@ -535,3 +535,33 @@ ero-sec-5-body1 {
   display: block; /* Ensure the label is a block element */
   margin-bottom: 5px; /* Space between label and input */
 }
+
+#profile_selections {
+  margin-top: 2.5vh;
+  display: flex;
+  flex-direction: row;
+  gap: 50px; /* Adjust gap between elements */
+}
+
+#profiles_for_selections {
+  width: 200px;
+  height: 40px;
+  border: 1px solid black;
+  border-radius: 5px;
+  padding: 0 5px; /* Add some padding inside the input */
+  cursor: pointer;
+  background-color: whitesmoke
+}
+
+#SetUserProfile {
+  background-color: #f50940; /* bg-red-300 */
+  color: white; /* text-white */
+  border-radius: 0.25rem; /* rounded */
+  padding: 0.5rem 0.5rem; /* px-2 py-1 */
+  transition: all 0.3s ease; /* transition duration-300 */
+  font-size: 1rem; /* text-base */
+}
+
+#SetUserProfile:hover {
+  background-color: #3182CE;
+}

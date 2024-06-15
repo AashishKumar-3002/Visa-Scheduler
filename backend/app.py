@@ -15,6 +15,26 @@ CORS(app)
 login_details = {}
 security_questions = {}
 
+@app.route("/set_profile", methods=["POST"])
+def set_profile():
+    try:
+        if request.method == "POST":
+            data_profile = request.json
+            if data_profile == {}:
+                raise Exception("400: Bad Request")
+                
+            # Process the data and save to global variables
+            selected_profile = data_profile.get("selectedProfile")
+            if selected_profile:
+                login_details["selectedProfile"] = selected_profile
+                return jsonify({"profile": selected_profile})
+            else:
+                raise Exception("400: Bad Request, profile is empty")
+        else:
+            raise Exception("405: Method Not Allowed")
+    except Exception as e:
+        return jsonify({"status": str(e)})
+
 @app.route("/submit_data", methods=["POST"])
 def submit_data():
     global login_details, security_questions  # Declare globals

@@ -134,3 +134,10 @@ document.getElementById('save-bot-config').addEventListener('click', function() 
         console.log('Profile data saved');
     });
 });
+
+document.getElementById('SetUserProfile').addEventListener('click', function() {
+    var selectedProfile = document.getElementById('profiles_for_selections').value;
+    chrome.storage.local.set({ selectedUserProfile: selectedProfile }, function() {
+        console.log('Profile saved:', selectedProfile);
+    });
+  });
