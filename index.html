@@ -247,7 +247,7 @@
                 </div>
         </form>
             <hr class="hero-sec-divider">
-            <div class="hero-section-five">
+            <!-- <div class="hero-section-five">
                 <p class="hero-sec-4-heading">Accounts</p>
                 <div class="container" id="alert-container">
                     <div class="hero-sec-2-body1-first">
@@ -262,20 +262,22 @@
                         Sign in with Google
                     </button>
                 </div>
-            </div>
-            <hr class="hero-sec-divider">
+            </div> -->
+            <!-- <hr class="hero-sec-divider"> -->
             <div class="hero-section-five">
-                <p class="hero-sec-4-heading">Advance Options</p>
+                <div class="hero-sec-4-heading-config">
+                    <p class="hero-sec-4-heading">Advance Options :-</p>
+                    <button type="button" class="save-bot-config" id="save-bot-config">Save</button>
+                </div>
                 <div class="hero-sec-5-body1">
                     <div class="hero-sec-2-body1-first">
                         <img class="body1-icon" src="icons8-info.svg" alt="">
                         <p class="body1-text">Profiles:</p>
                     </div>
                     <div class="select-sec5">
-                        <select id="select-box">
-                            <option value="">Profiles</option>
-                            <option value="first">Default</option>
-                            <option value="second">Default2</option>
+                        <select id="profile-select-box">
+                            <option value="Profile-1" selected>Profile-1 (default)</option>
+                            <option value="Profile-2">Profile-2</option>
                         </select>
                     </div>
                 </div>
@@ -286,21 +288,21 @@
                     </div>
                     <div class="select-sec5">
                         <select id="select-box botSpeed">
-                            <option value="">Speed</option>
-                            <option value="first">Two Seconds</option>
-                            <option value="second">Three Seconds</option>
-                            <option value="second">Four Seconds</option>
-                            <option value="second">Five Seconds</option>
-                            <option value="second">Six Seconds</option>
+                            <option value="">Select an option</option>
+                            <option value="15">15 mins</option>
+                            <option value="30" selected>30 mins (Default)</option>
+                            <option value="45">45 mins</option>
+                            <option value="60">60 mins</option>
+                            <option value="75">75 mins</option>
                         </select>
                     </div>
                 </div>
                 <div class="hero-sec-2-body1">
                     <div class="hero-sec-2-body1-first">
                         <img class="body1-icon" src="icons8-info.svg" alt="">
-                        <p class="body1-text">Check Dates in Loop:</p>
+                        <p class="body1-text">Enable automatic bot checks without manual start.:</p>
                     </div>
-                    <div class="hero-sec-toggle-button">
+                    <div class="hero-sec-toggle-button" id="BotManual">
                         <label class="switch">
                             <input type="checkbox">
                             <span class="slider round"></span>
@@ -310,16 +312,16 @@
                 <div class="hero-sec-2-body1">
                     <div class="hero-sec-2-body1-first">
                         <img class="body1-icon" src="icons8-info.svg" alt="">
-                        <p class="body1-text">Allow Captcha:</p>
+                        <p class="body1-text">Allow Auto Captcha FillUp(Not Live Yet):</p>
                     </div>
-                    <div class="hero-sec-toggle-button">
+                    <div class="hero-sec-toggle-button" id="AutoCaptchaFillup">
                         <label class="switch">
                             <input type="checkbox">
                             <span class="slider round"></span>
                         </label>
                     </div>
                 </div>
-                <div class="hero-sec-2-body1">
+                <!-- <div class="hero-sec-2-body1">
                     <div class="hero-sec-2-body1-first">
                         <img class="body1-icon" src="icons8-info.svg" alt="">
                         <p class="body1-text">Total Captcha Remaining:</p>
@@ -328,8 +330,8 @@
                           <p>
                             (0 / 0) You have reached the maximum limit of Captchas.</p>
                     </div>
-                </div>
-                <div class="hero-sec-2-body1">
+                </div> -->
+                <!-- <div class="hero-sec-2-body1">
                     <div class="hero-sec-2-body1-first">
                         <img class="body1-icon" src="icons8-info.svg" alt="">
                         <p class="body1-text">Logout on MaxedOut:</p>
@@ -340,13 +342,13 @@
                             <span class="slider round"></span>
                         </label>
                     </div>
-                </div>
+                </div> -->
                 <div class="hero-sec-2-body1">
                     <div class="hero-sec-2-body1-first" id="footer-last">
                         <img class="body1-icon" src="icons8-info.svg" alt="">
                         <p class="body1-text">Allow Notification:</p>
                     </div>
-                    <div class="hero-sec-toggle-button">
+                    <div class="hero-sec-toggle-button" id="BotNotifier">
                         <label class="switch">
                             <input type="checkbox">
                             <span class="slider round"></span>

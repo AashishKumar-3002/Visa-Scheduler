@@ -109,3 +109,28 @@ document.getElementById('userDataForm').addEventListener('submit', function(even
         alert('Error: ' + error.status);
     });
 });
+
+document.getElementById('save-bot-config').addEventListener('click', function() {
+    let selectedProfile = document.getElementById('profile-select-box').value;
+    let botSpeed = document.getElementById('select-box botSpeed').value;
+    let botMode = document.getElementById('BotManual').querySelector('input[type="checkbox"]').checked;
+    let autoCaptchaFillup = document.getElementById('AutoCaptchaFillup').querySelector('input[type="checkbox"]').checked;
+    let botnotification = document.getElementById('BotNotifier').querySelector('input[type="checkbox"]').checked;
+    
+    // Retrieve the data for the selected profile
+    let profileData = {
+        botSpeed: botSpeed,
+        botMode: botMode,
+        autoCaptchaFillup: autoCaptchaFillup,
+        botnotification: botnotification
+    };
+
+    console.log(profileData);
+
+    // Save the data to chrome.storage
+    let saveData = {};
+    saveData[selectedProfile] = profileData;
+    chrome.storage.local.set(saveData, function() {
+        console.log('Profile data saved');
+    });
+});

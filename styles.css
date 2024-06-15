@@ -197,6 +197,30 @@ input:checked+.slider:before {
   gap: 10px;
 }
 
+#BotManual {
+  margin-left: 4.5vh;
+}
+
+.hero-sec-4-heading-config {
+  display: flex;
+  align-items: center;
+}
+
+.hero-sec-4-heading {
+  margin-right: 2.5px;
+
+}
+
+.save-bot-config {
+  margin-left: 2.5vh;
+  /* change the color of the text */
+  color: #fafafa;
+  background-color: #000000;
+  /* increse the size of the button */
+  padding: 10px 20px;
+  margin-top: 2.5vh;
+}
+
 .date-container {
   height: 40px;
   width: 340px;
