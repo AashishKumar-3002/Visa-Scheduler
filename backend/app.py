@@ -18,34 +18,56 @@ security_questions = {}
 @app.route("/submit_data", methods=["POST"])
 def submit_data():
     global login_details, security_questions  # Declare globals
+    try:
+        if request.method == "POST":
+            # Retrieve data from the request
+            data = request.json
 
-    if request.method == "POST":
-        # Retrieve data from the request
-        data = request.json
+            if data == {}:  # Check if data is empty
+                raise Exception("400: Bad Request")
 
-        # Process the data and save to global variables
-        login_details["originCountry"] = data.get("originCountry")
-        login_details["appointmentStartDate"] = data.get("appointmentStartDate")
-        login_details["appointmentEndDate"] = data.get("appointmentEndDate")
-        login_details["singleCity"] = data.get("singleCity")
-        login_details["selectedCities"] = data.get("selectedCities")
-        login_details["autoLoginEnabled"] = data.get("autoLoginEnabled")
-        login_details["username"] = data.get("userName")
-        login_details["password"] = data.get("password")
+            # Process the data and save to global variables
+            # if origin country is not selected, set it to India
+            if not data.get("originCountry"):
+                login_details["originCountry"] = "India"
+            else:
+                login_details["originCountry"] = data.get("originCountry") 
+            login_details["appointmentStartDate"] = data.get("appointmentStartDate")
+            login_details["appointmentEndDate"] = data.get("appointmentEndDate")
+            login_details["singleCity"] = data.get("singleCity")
+            login_details["selectedCities"] = data.get("selectedCities")
+            login_details["autoLoginEnabled"] = data.get("autoLoginEnabled")
+            login_details["username"] = data.get("userName")
+            login_details["password"] = data.get("password")
 
-        security_questions_list = data.get("securityQuestions", [])
-        for i, question in enumerate(security_questions_list, 1):
-            security_questions[f"question_{i}"] = question.get(f"question_{i}")
-            security_questions[f"answer_{i}"] = question.get(f"answer_{i}")
+            # Check if any of the required fields are empty
+            if not login_details["username"] or not login_details["password"]:
+                raise Exception("400: Bad Request, username or password is empty")
+            
+            # either one of the city should be selected
+            if not login_details["singleCity"] and not login_details["selectedCities"]:
+                raise Exception("400: Bad Request, City is not selected")
+            
+            if not login_details["appointmentStartDate"] or not login_details["appointmentEndDate"]:
+                raise Exception("400: Bad Request, Appointment date is not selected")
+            
 
-        # # For demonstration, we'll print the extracted data to the console
-        # print("Login Details:", login_details)
-        # print("Security Questions:", security_questions)
+            security_questions_list = data.get("securityQuestions", [])
 
-        # Return a response
-        return jsonify({"status": "success"})
-    else:
-        return jsonify({"error": "Invalid request method"})
+            # Check if security questions are empty
+            if not security_questions_list:
+                raise Exception("400: Bad Request, security questions are empty")
+            
+            for i, question in enumerate(security_questions_list, 1):
+                security_questions[f"question_{i}"] = question.get(f"question_{i}")
+                security_questions[f"answer_{i}"] = question.get(f"answer_{i}")
+
+            # Return a response
+            return jsonify({"status": "Your response has been submitted successfully."})
+        else:
+            raise Exception("405: Method Not Allowed")
+    except Exception as e:
+        return jsonify({"status": str(e)})
 
 
 @app.route("/captcha_input", methods=["POST"])

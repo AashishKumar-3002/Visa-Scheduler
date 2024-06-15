@@ -100,8 +100,12 @@ document.getElementById('userDataForm').addEventListener('submit', function(even
     .then(data => {
         // Handle response from backend
         console.log(data);
+        // Display the success response in the alert popup
+        alert(data.status);
     })
     .catch(error => {
         console.error('Error:', error);
+        // Display the error message in the alert popup with warning style
+        alert('Error: ' + error.status);
     });
 });
