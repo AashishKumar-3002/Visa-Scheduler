@@ -1,5 +1,6 @@
 let timerInterval;
 let startTime;
+let timerStarted = false; 
 
 chrome.runtime.onInstalled.addListener(() => {
     // Create an alarm to check for slots every 10 minutes
@@ -7,6 +8,8 @@ chrome.runtime.onInstalled.addListener(() => {
 });
 
 chrome.alarms.onAlarm.addListener((alarm) => {
+    if (!timerStarted) return;
+
     if (alarm.name === "checkSlotsAlarm") {
         fetch("http://localhost:5000/start_process", {
             method: "GET"
@@ -24,6 +27,7 @@ chrome.alarms.onAlarm.addListener((alarm) => {
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request.action === "startTimer") {
+        timerStarted = true;
         startTime = new Date().getTime();
         timerInterval = setInterval(() => {
             const currentTime = new Date().getTime();
@@ -51,6 +55,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
         sendResponse({ status: "started" });
     } else if (request.action === "stopTimer") {
+        timerStarted = false;
         clearInterval(timerInterval);
         chrome.storage.local.remove("timer");
         sendResponse({ status: "stopped" });
