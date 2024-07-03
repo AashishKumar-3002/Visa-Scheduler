@@ -2,7 +2,7 @@ let timerInterval;
 let startTime;
 let timerStarted = false; 
 let botMode = false;
-let botSpeed = 30;
+let botruntime = 10;
 let autoCaptchaFillup = false;
 let botNotification = false;
 
@@ -26,7 +26,8 @@ chrome.storage.local.get(['selectedUserProfile'], function(result) {
         console.log('Profile data:', profileData);
         if (profileData && profileData[selectedUserProfile]) {
             botMode = profileData[selectedUserProfile]['botMode'];
-            botSpeed = profileData[selectedUserProfile]['botSpeed'];
+            botspeed = profileData[selectedUserProfile]['botSpeed'];
+            botruntime = profileData[selectedUserProfile]['botruntime'];
             autoCaptchaFillup = profileData[selectedUserProfile]['autoCaptchaFillup'];
             botNotification = profileData[selectedUserProfile]['botnotification'];
         } else {
@@ -38,7 +39,7 @@ chrome.storage.local.get(['selectedUserProfile'], function(result) {
 
 chrome.runtime.onInstalled.addListener(() => {
     // Create an alarm to check for slots every 10 minutes
-    chrome.alarms.create("checkSlotsAlarm", { delayInMinutes: botSpeed, periodInMinutes: botSpeed });
+    chrome.alarms.create("checkSlotsAlarm", { delayInMinutes: botruntime, periodInMinutes: botruntime });
 });
 
 chrome.alarms.onAlarm.addListener((alarm) => {

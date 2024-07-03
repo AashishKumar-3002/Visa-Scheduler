@@ -468,6 +468,16 @@ input:checked+.slider:before {
   padding-top: 20px;
 }
 
+.hero-sec-5-body3 {
+  display: flex; /* Use flexbox to layout children side by side */
+  align-items: center; /* Align items vertically in the center */ 
+  padding: 7px;
+}
+
+.hero-sec-5-body3 > :first-child {
+  margin-right: 25vh; /* Adjust this value to control the space between the children */
+}
+
 .footer-text {
   color: red;
   font-size: small;

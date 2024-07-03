@@ -113,6 +113,7 @@ document.getElementById('userDataForm').addEventListener('submit', function(even
 document.getElementById('save-bot-config').addEventListener('click', function() {
     let selectedProfile = document.getElementById('profile-select-box').value;
     let botSpeed = document.getElementById('select-box botSpeed').value;
+    let botruntime = document.getElementById('select-box botruntime').value;
     let botMode = document.getElementById('BotManual').querySelector('input[type="checkbox"]').checked;
     let autoCaptchaFillup = document.getElementById('AutoCaptchaFillup').querySelector('input[type="checkbox"]').checked;
     let botnotification = document.getElementById('BotNotifier').querySelector('input[type="checkbox"]').checked;
@@ -120,6 +121,7 @@ document.getElementById('save-bot-config').addEventListener('click', function() 
     // Retrieve the data for the selected profile
     let profileData = {
         botSpeed: botSpeed,
+        botruntime: botruntime,
         botMode: botMode,
         autoCaptchaFillup: autoCaptchaFillup,
         botnotification: botnotification
