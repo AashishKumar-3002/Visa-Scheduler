@@ -1,4 +1,4 @@
-import undetected_chromedriver as uc
+# import undetected_chromedriver as uc
 import time
 from PIL import Image
 import shutil
@@ -30,7 +30,9 @@ class SlotFinder:
         self = SlotFinder()
         
         # Initialize the WebDriver instance
-        self.driver = await uc.start()
+        self.driver = await uc.start(
+            user_data_dir="../User_Data/user_credentials",
+        )
         
         # Navigate to the URL and initialize the browser tab
         self.tab = await self.driver.get("https://www.usvisascheduling.com/")
@@ -104,140 +106,143 @@ class SlotFinder:
 
     async def find_my_slots(self, username, password , security_questionsanswers , start_date , end_date , cities_list=None ,  city=None):
         try:
+
             await self.tab.sleep(10)
-            await self.tab.wait_for("#signInName" , timeout=120)
+            # Check if the page has loaded
+            if not await self.tab.query_selector("#reschedule_appointment") and not await self.tab.query_selector("#continue_application"):
+                await self.tab.wait_for("#signInName" , timeout=120)
 
-            # Find the username and password fields and enter the user-provided values
-            username_field = await self.tab.select("#signInName")
-            await username_field.send_keys(username)
+                # Find the username and password fields and enter the user-provided values
+                username_field = await self.tab.select("#signInName")
+                await username_field.send_keys(username)
 
-            password_field = await self.tab.select("#password")
-            await password_field.send_keys(password)
-            counter = 0 
+                password_field = await self.tab.select("#password")
+                await password_field.send_keys(password)
+                counter = 0 
 
-            await self.get_capcha_text(counter)
+                await self.get_capcha_text(counter)
 
-            await self.tab.sleep(5)
+                await self.tab.sleep(5)
 
-            # Find the sign-in button and click it
-            sign_in_button = await self.tab.select("#continue")
-            await sign_in_button.click()
+                # Find the sign-in button and click it
+                sign_in_button = await self.tab.select("#continue")
+                await sign_in_button.click()
 
-            try:
+                try:
 
-                while(True):
-                    # Check if the captcha verification was successful
-                    captcha_reverification_required = await self.tab.select("#claimVerificationServerError")
+                    while(True):
+                        # Check if the captcha verification was successful
+                        captcha_reverification_required = await self.tab.select("#claimVerificationServerError")
 
-                    # If the captcha verification was not successful, refresh the captcha
-                    if captcha_reverification_required:
-                        # Use JavaScript to click the captcha refresh button
-                        captcha_refresh_button = await self.tab.select("#captchaRefreshImage")
-                        await captcha_refresh_button.click()
+                        # If the captcha verification was not successful, refresh the captcha
+                        if captcha_reverification_required:
+                            # Use JavaScript to click the captcha refresh button
+                            captcha_refresh_button = await self.tab.select("#captchaRefreshImage")
+                            await captcha_refresh_button.click()
 
-                        # Wait for the new captcha image to load
-                        await self.tab.sleep(3)
+                            # Wait for the new captcha image to load
+                            await self.tab.sleep(3)
 
-                        captcha_field = await self.tab.select("#extension_atlasCaptchaResponse")
-            
-                        await captcha_field.clear_input()
+                            captcha_field = await self.tab.select("#extension_atlasCaptchaResponse")
+                
+                            await captcha_field.clear_input()
 
-                        counter += 1
-                        await self.get_capcha_text(counter)
+                            counter += 1
+                            await self.get_capcha_text(counter)
 
-                        await self.tab.sleep(10)
-                        
-                        # Find the sign-in button and click it
-                        sign_in_button = await self.tab.select("#continue")
-                        await sign_in_button.click()
-                    else:
-                        break
-            except asyncio.exceptions.TimeoutError:
-                print("Captcha verification successful")
+                            await self.tab.sleep(10)
+                            
+                            # Find the sign-in button and click it
+                            sign_in_button = await self.tab.select("#continue")
+                            await sign_in_button.click()
+                        else:
+                            break
+                except asyncio.exceptions.TimeoutError:
+                    print("Captcha verification successful")
 
-            # Wait for the security questions to appear
-            wait = await self.tab.wait_for("[id^='kbq']" , timeout=120)
+                # Wait for the security questions to appear
+                wait = await self.tab.wait_for("[id^='kbq']" , timeout=120)
 
-            # Find the security question labels and answer fields
-            security_question_labels = await self.tab.select_all("p[id^='kbq']")
-            security_answer_fields = await self.tab.select_all("input[id^='kba']")
+                # Find the security question labels and answer fields
+                security_question_labels = await self.tab.select_all("p[id^='kbq']")
+                security_answer_fields = await self.tab.select_all("input[id^='kba']")
 
-            # Iterate through the security questions and answer fields
-            for i in range(len(security_question_labels)):
-                security_question_label = security_question_labels[i]
-                security_answer_field = security_answer_fields[i]
+                # Iterate through the security questions and answer fields
+                for i in range(len(security_question_labels)):
+                    security_question_label = security_question_labels[i]
+                    security_answer_field = security_answer_fields[i]
 
-                await security_answer_field.clear_input()
+                    await security_answer_field.clear_input()
 
-                # Get the security question text
-                security_question_text = security_question_label.text
-                print(f"Security Question: {security_question_text}")
+                    # Get the security question text
+                    security_question_text = security_question_label.text
+                    print(f"Security Question: {security_question_text}")
 
-                corresponding_answer = None
-                # Find the corresponding answer based on the security question text
-                for i in range(1, 4):
-                    if security_question_text == security_questionsanswers[f"question_{i}"]:
-                        corresponding_answer = security_questionsanswers[f"answer_{i}"]
-                        print(f"Corresponding answer: {corresponding_answer}")
-                        break
-                if not corresponding_answer:    
-                    # Get the answer for the security question
-                    print("Please re-enter and submit the answer for the security question on the extension page.")
-                    corresponding_answer = input(
-                        f"Enter the answer for '{security_question_text}': "
-                    )
+                    corresponding_answer = None
+                    # Find the corresponding answer based on the security question text
+                    for i in range(1, 4):
+                        if security_question_text == security_questionsanswers[f"question_{i}"]:
+                            corresponding_answer = security_questionsanswers[f"answer_{i}"]
+                            print(f"Corresponding answer: {corresponding_answer}")
+                            break
+                    if not corresponding_answer:    
+                        # Get the answer for the security question
+                        print("Please re-enter and submit the answer for the security question on the extension page.")
+                        corresponding_answer = input(
+                            f"Enter the answer for '{security_question_text}': "
+                        )
 
-                # Send keys to the answer field
-                await security_answer_field.send_keys(corresponding_answer)
-
-            # Find the continue button and click it
-            continue_button = await self.tab.select("#continue")
-            await continue_button.click()
-
-            # Check if the error message is displayed
-            try:
-                # Wait for the error message to be displayed
-                error_message = await self.tab.wait_for("#claimVerificationServerError", timeout=10)
-
-                # Check the style attribute to see if the error is displayed
-                if error_message.text:
-                    print(error_message.text)
-                    # Iterate through the security questions and answer fields
-                    for i in range(len(security_question_labels)):
-                        security_question_label = security_question_labels[i]
-                        security_answer_field = security_answer_fields[i]
-
-                        await security_answer_field.clear_input()
-
-                        # Get the security question text
-                        security_question_text = security_question_label.text
-                        print(f"Security Question: {security_question_text}")
-
-                        corresponding_answer = None
-                        # Find the corresponding answer based on the security question text
-                        for i in range(1, 4):
-                            if security_question_text == security_questionsanswers[f"question_{i}"]:
-                                corresponding_answer = security_questionsanswers[f"answer_{i}"]
-                                print(f"Corresponding answer: {corresponding_answer}")
-                                break
-                        
-                        if not corresponding_answer:
-                            # Wait for the user to input the correct answer
-                            print("Please re-enter and submit the answer for the security question on the extension page.")
-                            corresponding_answer = input("Please enter the correct answer: ")
-
-                        # Enter the correct answer
-                        await security_answer_field.send_keys(corresponding_answer)
+                    # Send keys to the answer field
+                    await security_answer_field.send_keys(corresponding_answer)
 
                 # Find the continue button and click it
                 continue_button = await self.tab.select("#continue")
                 await continue_button.click()
 
-            except asyncio.exceptions.TimeoutError:
-                print("The Security Question CheckIn Was successfull.")
+                # Check if the error message is displayed
+                try:
+                    # Wait for the error message to be displayed
+                    error_message = await self.tab.wait_for("#claimVerificationServerError", timeout=10)
 
-            # Wait for 3 seconds before quitting the browser
-            time.sleep(10)
+                    # Check the style attribute to see if the error is displayed
+                    if error_message.text:
+                        print(error_message.text)
+                        # Iterate through the security questions and answer fields
+                        for i in range(len(security_question_labels)):
+                            security_question_label = security_question_labels[i]
+                            security_answer_field = security_answer_fields[i]
+
+                            await security_answer_field.clear_input()
+
+                            # Get the security question text
+                            security_question_text = security_question_label.text
+                            print(f"Security Question: {security_question_text}")
+
+                            corresponding_answer = None
+                            # Find the corresponding answer based on the security question text
+                            for i in range(1, 4):
+                                if security_question_text == security_questionsanswers[f"question_{i}"]:
+                                    corresponding_answer = security_questionsanswers[f"answer_{i}"]
+                                    print(f"Corresponding answer: {corresponding_answer}")
+                                    break
+                            
+                            if not corresponding_answer:
+                                # Wait for the user to input the correct answer
+                                print("Please re-enter and submit the answer for the security question on the extension page.")
+                                corresponding_answer = input("Please enter the correct answer: ")
+
+                            # Enter the correct answer
+                            await security_answer_field.send_keys(corresponding_answer)
+
+                    # Find the continue button and click it
+                    continue_button = await self.tab.select("#continue")
+                    await continue_button.click()
+
+                except asyncio.exceptions.TimeoutError:
+                    print("The Security Question CheckIn Was successfull.")
+
+                # Wait for 3 seconds before quitting the browser
+                time.sleep(10)
 
             # Check for 'reschedule_appointment' or 'continue_application' elements
             try:

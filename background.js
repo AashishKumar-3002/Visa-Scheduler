@@ -64,6 +64,9 @@ chrome.alarms.onAlarm.addListener((alarm) => {
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request.action === "startTimer") {
+        if (timerStarted) {
+            clearInterval(timerInterval);
+        }
         timerStarted = true;
         startTime = new Date().getTime();
         timerInterval = setInterval(() => {
