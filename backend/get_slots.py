@@ -33,6 +33,16 @@ class SlotFinder:
         self.driver = await uc.start(
             user_data_dir="../User_Data/user_credentials",
         )
+        self.cookie_file = "../User_Data/session.dat"
+
+        # Check if the cookie file exists
+        if os.path.exists(self.cookie_file):
+            # Load cookies from the existing file
+            await self.driver.cookies.load(self.cookie_file)
+            print("Cookies loaded successfully.")
+        else:
+            await self.driver.cookies.save(self.cookie_file)
+            print("Cookies saved successfully.")
         
         # Navigate to the URL and initialize the browser tab
         self.tab = await self.driver.get("https://www.usvisascheduling.com/")
@@ -242,6 +252,7 @@ class SlotFinder:
                     print("The Security Question CheckIn Was successfull.")
 
                 # Wait for 3 seconds before quitting the browser
+                await self.driver.cookies.save(self.cookie_file)
                 time.sleep(10)
 
             # Check for 'reschedule_appointment' or 'continue_application' elements
