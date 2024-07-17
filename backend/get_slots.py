@@ -120,7 +120,7 @@ class SlotFinder:
             await self.tab.sleep(10)
             # Check if the page has loaded
             if not await self.tab.query_selector("#reschedule_appointment") and not await self.tab.query_selector("#continue_application"):
-                await self.tab.wait_for("#signInName" , timeout=120)
+                await self.tab.wait_for("#signInName" , timeout=900)
 
                 # Find the username and password fields and enter the user-provided values
                 username_field = await self.tab.select("#signInName")
