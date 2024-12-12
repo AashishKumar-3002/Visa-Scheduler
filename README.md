@@ -1,4 +1,4 @@
-# Setting Up Visa-Scheduler Chrome Extension:
+# Setting Up Visa-Scheduler Chrome Extension(Not on chrome store):
 
 
 
